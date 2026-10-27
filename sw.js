@@ -1,6 +1,6 @@
 // Offline cache: serve from cache, refresh in the background so updates arrive on next open.
-const CACHE = 'tip-tracker-v3';
-const FILES = ['./', 'index.html', 'manifest.json', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'tip-tracker-v5';
+const FILES = ['./', 'index.html', 'manifest.json', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'archivo.woff2'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
