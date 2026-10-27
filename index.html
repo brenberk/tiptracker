@@ -72,6 +72,20 @@ main{padding:0 16px}
 .day.today .dn{color:var(--red);box-shadow:inset 0 0 0 1.5px var(--red);font-weight:700}
 .day:active{background:var(--wash)}
 
+/* calendar screen is locked: it fits the screen and never scrolls */
+body.lock{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;overscroll-behavior:none}
+body.lock #app{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column;padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+body.lock main{flex:1;min-height:0;display:flex;flex-direction:column}
+body.lock .cal{flex:1;min-height:0;display:flex;flex-direction:column}
+body.lock .grid{flex:1;min-height:0;grid-auto-rows:minmax(0,1fr)}
+body.lock .day{min-height:0;overflow:hidden}
+body.lock .hint{padding:10px 24px 0}
+@media (max-height:740px){body.lock .hero{padding-bottom:12px}body.lock .hero-n{font-size:42px}body.lock .hero-meta{margin-top:6px;font-size:14px}body.lock .top{padding-bottom:6px}
+  body.lock .day{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr;padding:3px 4px 4px}
+  body.lock .day .dn{width:20px;height:20px;font-size:12px;margin:0}
+  body.lock .day .dh{margin:0;align-self:center;font-size:10px}
+  body.lock .day .dm{grid-column:1/3;align-self:end;font-size:14.5px;line-height:1.05}}
+
 /* segmented control */
 .seg{display:flex;background:var(--rule);border-radius:12px;padding:3px;margin:2px 0 16px}
 .seg button{flex:1;padding:8px 6px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
@@ -447,6 +461,7 @@ function render() {
   const v = $('#view');
   const fn = { cal: viewCal, log: viewLog, stats: viewStats, set: viewSettings }[ui.tab];
   const st = window.scrollY;
+  document.body.classList.toggle('lock', ui.tab === 'cal');
   v.innerHTML = fn();
   document.querySelectorAll('#tabs button').forEach(b => { const on = b.dataset.tab === ui.tab; b.classList.toggle('on', on); b.setAttribute('aria-current', on ? 'page' : 'false'); });
   $('#fab').style.display = ui.tab === 'set' ? 'none' : 'flex';
@@ -779,6 +794,11 @@ document.addEventListener('change', ev => {
   if (el.dataset.f === 'tipped') j.tipped = el.checked;
   save();
 });
+
+// iOS fallback: block drag-scrolling on the calendar screen, except inside an open sheet
+document.addEventListener('touchmove', ev => {
+  if (document.body.classList.contains('lock') && !ev.target.closest('.panel')) ev.preventDefault();
+}, { passive: false });
 
 /* ---------- start ---------- */
 render();
