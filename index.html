@@ -91,8 +91,14 @@ main{padding:0 12px}
 .field{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
 input[type=text],input[type=date],input[type=time],select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px;width:100%;color:var(--text);min-height:44px}
 input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.two>*,.three>*,.field{min-width:0}
+input[type=text],input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;height:44px;line-height:1.2;text-align:left}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;min-height:1.2em;margin:0}
+input[type=time]{padding-left:10px;padding-right:6px}
+input[type=time]::-webkit-calendar-picker-indicator{display:none}
+input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
 .chk{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:10px;color:var(--text);font-weight:500}
 .chk input{width:20px;height:20px;accent-color:var(--accent)}
 .btn{display:block;width:100%;padding:12px;border-radius:12px;background:var(--accent-bg);color:var(--accent);font-weight:700;text-align:center;margin-top:8px}
@@ -102,7 +108,7 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
 .banner{background:var(--accent-bg);color:var(--text);border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:10px;display:flex;gap:10px;align-items:center;justify-content:space-between}
 .banner button{font-weight:700;color:var(--accent)}
 /* sheet */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;height:100%;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
 .panel{background:var(--card);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 .sheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .sheet-h h2{margin:0;font-size:20px}
@@ -112,6 +118,13 @@ form{display:flex;flex-direction:column;gap:12px}
 .actions{display:grid;grid-template-columns:1fr 2fr;gap:8px}
 .actions.one{grid-template-columns:1fr}
 .actions .btn{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;flex-direction:column;align-items:flex-start;padding:8px 12px;border-radius:12px;background:var(--bg);border:1.5px solid var(--line);font-weight:700;font-size:14px;color:var(--text);line-height:1.2}
+.chip small{font-weight:500;font-size:11px;color:var(--muted)}
+.chip.on{border-color:var(--accent);background:var(--accent-bg)}
+.chip.add{justify-content:center;color:var(--accent);border-style:dashed}
+textarea{width:100%;min-height:160px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:14px/1.4 ui-monospace,Menlo,monospace;color:var(--text);resize:vertical}
+.addjob{background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:12px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -127,7 +140,7 @@ form{display:flex;flex-direction:column;gap:12px}
   <button data-tab="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
 </nav>
 <div id="sheet"></div>
-<input type="file" id="importFile" accept=".json,application/json" hidden>
+<input type="file" id="importFile" accept=".json,.csv,.tsv,.txt,text/csv,text/plain,application/json" hidden>
 
 <script>
 /* ---------- helpers ---------- */
@@ -297,8 +310,18 @@ function viewSettings() {
     <div style="display:flex;align-items:end"><label class="chk" style="margin:0 0 12px"><input type="checkbox" data-f="tipped" ${j.tipped ? 'checked' : ''}>Gets tips</label></div></div>
     ${state.jobs.length > 1 ? `<button class="btn danger" data-act="delJob" data-id="${j.id}" style="margin-top:0">Delete job</button>` : ''}
   </div>`).join('');
-  return `<div class="card"><p class="h3">Jobs &amp; hourly wages</p>${jobs}<button class="btn" data-act="addJob">+ Add job</button>
-    <p class="note">Add any other work you do (e.g. a day job at $18/hr). The wage here is the default for new shifts; you can change it per shift.</p></div>
+  return `<div class="card"><p class="h3">Job presets</p>${jobs}
+    <div class="addjob"><p class="h3" style="margin-bottom:8px">Add a preset</p>
+      <label class="field">Name<input type="text" id="nj_name" placeholder="e.g. Day job, Catering"></label>
+      <div class="two"><label class="field">Hourly wage ($)<input type="text" inputmode="decimal" id="nj_rate" placeholder="0.00"></label>
+      <div style="display:flex;align-items:end"><label class="chk" style="margin:0 0 12px"><input type="checkbox" id="nj_tipped">Gets tips</label></div></div>
+      <button class="btn primary" data-act="saveJob" style="margin-top:0">Add preset</button></div>
+    <p class="note">Presets show up as one-tap buttons when you add a shift and fill in the hourly wage. Changing a preset's wage only affects new shifts; past shifts keep the wage they were saved with. Deleting a preset keeps your past shifts.</p></div>
+  <div class="card"><p class="h3">Import from another app</p>
+    <button class="btn primary" data-act="importCSV" style="margin-top:0">Import a CSV / spreadsheet file</button>
+    <button class="btn" data-act="pasteImport">Paste from a spreadsheet</button>
+    <button class="btn" data-act="csvTemplate">Download a blank template</button>
+    <p class="note">The first row needs headers. Recognized: Date, Job, Hours (or Start/End), Rate, Cash tips, Card tips (or just Tips), Tip-out, Notes. Re-importing the same data won't create duplicates.</p></div>
   <div class="card"><p class="h3">Backup &amp; export</p>
     <button class="btn primary" data-act="exportJSON" style="margin-top:0">Back up (JSON)</button>
     <button class="btn" data-act="exportCSV">Export spreadsheet (CSV)</button>
@@ -340,11 +363,11 @@ function entrySheet(id, date) {
   const jobId = e && jobOf(e.jobId) ? e.jobId : (jobOf(state.lastJob) ? state.lastJob : state.jobs[0].id);
   const job = jobOf(jobId);
   const v = x => x ? x : '';
-  const opts = state.jobs.map(j => `<option value="${j.id}" ${j.id === jobId ? 'selected' : ''}>${esc(j.name)}</option>`).join('') + '<option value="__new">＋ New job…</option>';
+  const chips = state.jobs.map(j => `<button type="button" class="chip${j.id === jobId ? ' on' : ''}" data-chip="${j.id}">${esc(j.name)}<small>${j.rate ? money(j.rate) + '/hr' : 'no wage'}${j.tipped ? ' + tips' : ''}</small></button>`).join('') + '<button type="button" class="chip add" data-chip="__new">＋ New</button>';
   openSheet(`<div class="sheet-h"><h2>${e ? 'Edit shift' : 'Add shift'}</h2><button class="icon" data-close>✕</button></div>
   <form id="ef" autocomplete="off" novalidate>
     <label class="field">Date<input type="date" id="f_date" value="${d}"></label>
-    <label class="field">Job<select id="f_job">${opts}</select></label>
+    <div class="field">Job preset<div class="chips" id="chips">${chips}</div><input type="hidden" id="f_job" value="${jobId}"></div>
     <div class="three">
       <label class="field">Start<input type="time" id="f_start"></label>
       <label class="field">End<input type="time" id="f_end"></label>
@@ -377,14 +400,12 @@ function entrySheet(id, date) {
     let mins = tm(en) - tm(s); if (mins <= 0) mins += 1440;
     g('hours').value = Math.round(mins / 60 * 100) / 100;
   };
-  let lastJob = jobId;
-  g('job').addEventListener('change', () => {
-    if (g('job').value === '__new') {
-      const nj = addJob();
-      if (nj) { entrySheet(id, g('date').value); return; }
-      g('job').value = lastJob; return;
-    }
-    const j = jobOf(g('job').value); lastJob = j.id;
+  $('#chips').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-chip]'); if (!b) return;
+    if (b.dataset.chip === '__new') { if (addJob()) entrySheet(id, g('date').value); return; }
+    const j = jobOf(b.dataset.chip); if (!j) return;
+    g('job').value = j.id;
+    document.querySelectorAll('#chips .chip').forEach(c => c.classList.toggle('on', c.dataset.chip === j.id));
     g('rate').value = j.rate || '';
     $('#tipfields').style.display = j.tipped ? 'flex' : 'none';
     preview();
@@ -440,11 +461,9 @@ function exportCSV() {
   [...state.entries].sort((a, b) => a.date.localeCompare(b.date)).forEach(e => { const c = calc(e); rows.push([e.date, jobName(e), e.hours, e.rate, c.pay.toFixed(2), e.cash, e.card, e.tipOut, c.total.toFixed(2), e.notes || '']); });
   shareFile(`tip-tracker-${todayStr()}.csv`, rows.map(r => r.map(q).join(',')).join('\n'), 'text/csv');
 }
-$('#importFile').addEventListener('change', async ev => {
-  const f = ev.target.files[0]; ev.target.value = '';
-  if (!f) return;
+function restoreJSON(text) {
   try {
-    const data = JSON.parse(await f.text());
+    const data = JSON.parse(text);
     if (!data || !Array.isArray(data.entries)) throw new Error('bad');
     const ids = new Set(state.entries.map(e => e.id)), jids = new Set(state.jobs.map(j => j.id));
     let n = 0;
@@ -452,6 +471,138 @@ $('#importFile').addEventListener('change', async ev => {
     data.entries.forEach(e => { if (e && e.id && e.date && !ids.has(e.id)) { state.entries.push(e); n++; } });
     save(); render(); alert(`Restored ${n} shift${n === 1 ? '' : 's'}.`);
   } catch (e) { alert('That file doesn\'t look like a Tip Tracker backup.'); }
+}
+
+/* ---------- CSV / spreadsheet import ---------- */
+function parseTable(text) {
+  text = text.replace(/^﻿/, '');
+  const first = text.split(/\r?\n/)[0] || '';
+  const cnt = ch => first.split(ch).length - 1;
+  const delim = [['\t', cnt('\t')], [';', cnt(';')], [',', cnt(',')]].sort((a, b) => b[1] - a[1])[0][0];
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === delim) { row.push(cur); cur = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cur); cur = ''; rows.push(row); row = []; }
+    else cur += c;
+  }
+  if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim() !== ''));
+}
+const HDR = {
+  date: /^(date|day|shift date|work date)$/,
+  job: /^(job|position|role|employer|workplace|place|restaurant|bar|location)$/,
+  hours: /^(hours?|hrs?|hours worked|total hours)$/,
+  start: /^(start|start time|clock in|time in|in)$/,
+  end: /^(end|end time|clock out|time out|out)$/,
+  rate: /^(rate|hourly|hourly rate|hourly wage|wage|pay rate|base|base pay rate)$/,
+  cash: /^(cash|cash tips?)$/,
+  card: /^(card|credit|card tips?|credit tips?|cc tips?|credit card tips?)$/,
+  tips: /^(tips?|total tips?|tips earned)$/,
+  tipOut: /^(tip ?out|tip share|tips? shared|tips? out|tipped out)$/,
+  total: /^(total|earned|earnings|income|total earned|amount|pay|total pay)$/,
+  notes: /^(notes?|memo|comments?|description)$/
+};
+const normH = h => String(h).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+function dateLoose(s) {
+  s = String(s || '').trim(); let m;
+  const ok = (y, mo, d) => { const dt = new Date(y, mo - 1, d); return dt.getFullYear() === y && dt.getMonth() === mo - 1 && dt.getDate() === d ? fmtD(dt) : null; };
+  if ((m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))) return ok(+m[1], +m[2], +m[3]);
+  if ((m = s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/))) { let y = +m[3]; if (y < 100) y += 2000; return ok(y, +m[1], +m[2]); }
+  if (/\d{4}/.test(s)) { const d = new Date(s); if (!isNaN(d)) return fmtD(d); }
+  return null;
+}
+function timeMins(s) {
+  const m = String(s || '').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap])?m?$/i);
+  if (!m) return null;
+  let h = +m[1]; const mi = +(m[2] || 0), ap = (m[3] || '').toLowerCase();
+  if (ap === 'p' && h < 12) h += 12; if (ap === 'a' && h === 12) h = 0;
+  return h * 60 + mi;
+}
+let pendingImport = null;
+function buildImport(rows) {
+  if (rows.length < 2) return { error: 'I found a header but no shifts. The first row should be headers, then one shift per row.' };
+  const col = {};
+  rows[0].map(normH).forEach((h, i) => { for (const k in HDR) if (!(k in col) && HDR[k].test(h)) { col[k] = i; break; } });
+  if (!('date' in col)) return { error: 'I couldn\'t find a Date column. The first row needs headers like Date, Hours, Cash tips, Card tips.' };
+  const get = (r, k) => (k in col ? (r[col[k]] || '') : '');
+  const keyOf = e => [e.date, (e.jobName || '').toLowerCase(), e.hours, e.rate, e.cash, e.card, e.tipOut].join('|');
+  const seen = new Set(state.entries.map(e => keyOf({ ...e, jobName: jobName(e) })));
+  const out = [], newJobs = {}; let skipped = 0, dupes = 0, flat = 0;
+  const defJob = jobOf(state.lastJob) || state.jobs[0];
+  for (const r of rows.slice(1)) {
+    const date = dateLoose(get(r, 'date'));
+    if (!date) { skipped++; continue; }
+    let hours = num(get(r, 'hours'));
+    if (!hours && 'start' in col && 'end' in col) {
+      const a = timeMins(get(r, 'start')), b = timeMins(get(r, 'end'));
+      if (a !== null && b !== null) { let m = b - a; if (m <= 0) m += 1440; hours = Math.round(m / 60 * 100) / 100; }
+    }
+    const name = String(get(r, 'job')).trim() || defJob.name;
+    const existing = state.jobs.find(j => j.name.toLowerCase() === name.toLowerCase());
+    let rate = String(get(r, 'rate')).trim() !== '' ? num(get(r, 'rate')) : (existing ? existing.rate : 0);
+    let cash = num(get(r, 'cash')), card = num(get(r, 'card'));
+    const tipsOnly = num(get(r, 'tips'));
+    if (!cash && !card && tipsOnly) card = tipsOnly;
+    const tipOut = num(get(r, 'tipOut'));
+    const total = num(get(r, 'total'));
+    if (!hours && !cash && !card && total > 0) { cash = total; flat++; }
+    if (!hours && !cash && !card) { skipped++; continue; }
+    const e = { id: uid(), date, jobName: name, hours, rate, cash, card, tipOut, notes: String(get(r, 'notes')).trim() };
+    const k = keyOf(e);
+    if (seen.has(k)) { dupes++; continue; }
+    seen.add(k); out.push(e);
+    if (!existing && !newJobs[name.toLowerCase()]) newJobs[name.toLowerCase()] = { name, rate, tipped: !!(cash || card || tipOut) };
+  }
+  if (!out.length) return { error: `No new shifts to import (${skipped} skipped, ${dupes} already in the app).` };
+  return { entries: out, newJobs: Object.values(newJobs), skipped, dupes, flat };
+}
+function startImport(text) {
+  const res = buildImport(parseTable(text));
+  if (res.error) { alert(res.error); return; }
+  pendingImport = res;
+  const dates = res.entries.map(e => e.date).sort();
+  const s = summarize(res.entries);
+  openSheet(`<div class="sheet-h"><h2>Import ${res.entries.length} shift${res.entries.length === 1 ? '' : 's'}?</h2><button class="icon" data-close>✕</button></div>
+  <div class="card" style="margin-bottom:10px"><div class="jrow"><span>Date range</span><b>${dates[0]} → ${dates[dates.length - 1]}</b></div>
+    <div class="jrow"><span>Hours</span><b>${hrs(s.hours)}</b></div>
+    <div class="jrow"><span>Total earned</span><b>${money(s.total)}</b></div>
+    ${res.newJobs.length ? `<div class="jrow"><span>New job presets</span><b>${res.newJobs.map(j => esc(j.name)).join(', ')}</b></div>` : ''}
+    ${res.dupes ? `<div class="jrow"><span>Already in app (skipped)</span><b>${res.dupes}</b></div>` : ''}
+    ${res.skipped ? `<div class="jrow"><span>Rows skipped (no date or amounts)</span><b>${res.skipped}</b></div>` : ''}
+  </div>
+  ${res.flat ? `<p class="note" style="margin-bottom:10px">${res.flat} row${res.flat === 1 ? ' only had' : 's only had'} a total with no hours or tips, so ${res.flat === 1 ? 'it was' : 'they were'} imported as cash tips.</p>` : ''}
+  <div class="actions"><button class="btn" data-close>Cancel</button><button class="btn primary" data-act="commitImport">Import</button></div>`);
+}
+function commitImport() {
+  if (!pendingImport) return;
+  const p = pendingImport; pendingImport = null;
+  const byName = {};
+  state.jobs.forEach(j => byName[j.name.toLowerCase()] = j);
+  p.newJobs.forEach(nj => { const j = { id: uid(), name: nj.name, rate: nj.rate, tipped: nj.tipped }; state.jobs.push(j); byName[j.name.toLowerCase()] = j; });
+  p.entries.forEach(e => { const j = byName[e.jobName.toLowerCase()]; e.jobId = j ? j.id : state.jobs[0].id; state.entries.push(e); });
+  save(); closeSheet();
+  const last = p.entries.map(e => e.date).sort().pop(); const d = parseD(last); ui.y = d.getFullYear(); ui.m = d.getMonth();
+  render();
+  alert(`Imported ${p.entries.length} shift${p.entries.length === 1 ? '' : 's'}.`);
+}
+function pasteSheet() {
+  openSheet(`<div class="sheet-h"><h2>Paste your data</h2><button class="icon" data-close>✕</button></div>
+  <p class="note" style="margin:0 0 10px">Copy rows from a spreadsheet (include the header row) and paste below.</p>
+  <textarea id="pasteBox" placeholder="Date	Job	Hours	Cash tips	Card tips&#10;10/20/2026	Bar	6.5	80	120"></textarea>
+  <div class="actions" style="margin-top:12px"><button class="btn" data-close>Cancel</button><button class="btn primary" data-act="pasteGo">Preview import</button></div>`);
+}
+function csvTemplate() {
+  const t = 'Date,Job,Start,End,Hours,Rate,Cash tips,Card tips,Tip-out,Notes\n2026-10-20,Serving / Bartending,17:00,23:30,6.5,5,80,120,25,\n2026-10-25,Day job,09:00,14:00,5,18,,,,\n';
+  shareFile('tip-tracker-template.csv', t, 'text/csv');
+}
+$('#importFile').addEventListener('change', async ev => {
+  const f = ev.target.files[0]; ev.target.value = '';
+  if (!f) return;
+  const text = await f.text();
+  if (text.trim().startsWith('{')) restoreJSON(text); else startImport(text);
 });
 
 /* ---------- events ---------- */
@@ -481,7 +632,18 @@ document.addEventListener('click', ev => {
       break;
     case 'exportJSON': exportJSON(); break;
     case 'exportCSV': exportCSV(); break;
-    case 'importJSON': $('#importFile').click(); break;
+    case 'importJSON': case 'importCSV': $('#importFile').click(); break;
+    case 'pasteImport': pasteSheet(); break;
+    case 'pasteGo': { const t = $('#pasteBox').value; if (!t.trim()) { alert('Paste your rows first.'); break; } startImport(t); break; }
+    case 'commitImport': commitImport(); break;
+    case 'csvTemplate': csvTemplate(); break;
+    case 'saveJob': {
+      const name = $('#nj_name').value.trim();
+      if (!name) { alert('Give the preset a name.'); break; }
+      if (state.jobs.some(j => j.name.toLowerCase() === name.toLowerCase())) { alert('You already have a preset with that name.'); break; }
+      state.jobs.push({ id: uid(), name, rate: num($('#nj_rate').value), tipped: $('#nj_tipped').checked });
+      save(); render(); break;
+    }
     case 'hideInstall': try { localStorage.setItem('tt.hideInstall', '1'); } catch (e) {} render(); break;
     case 'wipe':
       if (confirm('Delete ALL shifts and jobs? This cannot be undone.') && confirm('Really delete everything? Make sure you have a backup.')) {

@@ -1,5 +1,5 @@
 // Offline cache: serve from cache, refresh in the background so updates arrive on next open.
-const CACHE = 'tip-tracker-v1';
+const CACHE = 'tip-tracker-v3';
 const FILES = ['./', 'index.html', 'manifest.json', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
